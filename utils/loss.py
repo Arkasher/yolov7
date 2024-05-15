@@ -753,10 +753,10 @@ class ComputeLossOTA:
                 _, cost_argmin = torch.min(cost[:, anchor_matching_gt > 1], dim=0)
                 matching_matrix[:, anchor_matching_gt > 1] *= 0.0
                 matching_matrix[cost_argmin, anchor_matching_gt > 1] = 1.0
-            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to(torch.device('cuda'))
+            fg_mask_inboxes = (matching_matrix.sum(0) > 0.0).to('cuda')
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
-            from_which_layer = from_which_layer[fg_mask_inboxes]
+            from_which_layer = from_which_layer.to(fg_mask_inboxes.device)[fg_mask_inboxes]
             all_b = all_b[fg_mask_inboxes]
             all_a = all_a[fg_mask_inboxes]
             all_gj = all_gj[fg_mask_inboxes]
@@ -1083,7 +1083,7 @@ class ComputeLossBinOTA:
             fg_mask_inboxes = matching_matrix.sum(0) > 0.0
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
-            from_which_layer = from_which_layer[fg_mask_inboxes]
+            from_which_layer = from_which_layer.to(torch.device('cuda'))[fg_mask_inboxes]
             all_b = all_b[fg_mask_inboxes]
             all_a = all_a[fg_mask_inboxes]
             all_gj = all_gj[fg_mask_inboxes]
@@ -1401,7 +1401,7 @@ class ComputeLossAuxOTA:
             fg_mask_inboxes = matching_matrix.sum(0) > 0.0
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
-            from_which_layer = from_which_layer[fg_mask_inboxes]
+            from_which_layer = from_which_layer.to(torch.device('cuda'))[fg_mask_inboxes]
             all_b = all_b[fg_mask_inboxes]
             all_a = all_a[fg_mask_inboxes]
             all_gj = all_gj[fg_mask_inboxes]
@@ -1554,7 +1554,7 @@ class ComputeLossAuxOTA:
             fg_mask_inboxes = matching_matrix.sum(0) > 0.0
             matched_gt_inds = matching_matrix[:, fg_mask_inboxes].argmax(0)
         
-            from_which_layer = from_which_layer[fg_mask_inboxes]
+            from_which_layer = from_which_layer.to(torch.device('cuda'))[fg_mask_inboxes]
             all_b = all_b[fg_mask_inboxes]
             all_a = all_a[fg_mask_inboxes]
             all_gj = all_gj[fg_mask_inboxes]
